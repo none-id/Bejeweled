@@ -13,7 +13,7 @@ find_package(Qt5 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(Bejeweled main.cpp)
+add_executable(Bejeweled src/main.cpp)
 target_link_libraries(Bejeweled
         Qt5::Core
         Qt5::Gui
