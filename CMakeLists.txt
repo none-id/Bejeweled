@@ -13,10 +13,13 @@ find_package(Qt5 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(Bejeweled src/main.cpp)
+add_executable(Bejeweled
+        src/main.cpp
+        src/DB/Player.cpp src/DB/Player.h
+        src/DB/DB.cpp src/DB/DB.h)
+
 target_link_libraries(Bejeweled
         Qt5::Core
         Qt5::Gui
-        Qt5::Widgets
-        )
+        Qt5::Widgets)
 
