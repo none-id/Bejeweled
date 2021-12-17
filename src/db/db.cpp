@@ -1,5 +1,7 @@
 #include "db.h"
 
+#include "Player.h"
+
 namespace bjw {
 namespace db {
 
@@ -21,6 +23,21 @@ bool CloseDB() {
     return false;
   }
   sqlite3_close(GetDB());
+  return true;
+}
+
+bool Execute(const std::string& sql) {
+  sqlite3* db = GetDB();
+  if (db == nullptr) {
+    return false;
+  }
+  char* errmsg = nullptr;
+  int rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &errmsg);
+  if (rc != SQLITE_OK) {
+    std::cerr << "SQL error: " << errmsg << std::endl;
+    sqlite3_free(errmsg);
+    return false;
+  }
   return true;
 }
 
