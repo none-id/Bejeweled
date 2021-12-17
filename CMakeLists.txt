@@ -6,7 +6,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-
 find_package(Qt5 COMPONENTS
         Core
         Gui
@@ -16,7 +15,9 @@ find_package(Qt5 COMPONENTS
 add_executable(Bejeweled
         src/main.cpp
         src/DB/Player.cpp src/DB/Player.h
-        src/DB/db.cpp src/DB/db.h)
+        src/DB/db.cpp src/DB/db.h
+        src/Item.cpp src/Item.h
+        src/GameJudge.cpp src/GameJudge.h)
 
 target_link_libraries(Bejeweled
         sqlite3
