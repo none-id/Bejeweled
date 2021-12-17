@@ -1,65 +1,64 @@
-//
-// Created by AAA on 2021/12/16.
-//
-
 #include "GameJudge.h"
 
+namespace bjw {
+
 // 处理玩家移子操作
-void GameJudge::pdDeleteItem(int x1, int y1, int x2, int y2) {
+void GameJudge::PdDeleteItem(int x1, int y1, int x2, int y2) {
   int flag = 0;
-  findLenthMore3(x1, y1, flag);
-  findLenthMore3(x2, y2, flag);
+  FindLengthMore3(x1, y1, flag);
+  FindLengthMore3(x2, y2, flag);
 }
 
 // 向UI传输数据
-void GameJudge::sendData() {
+void GameJudge::SendData() {
   // TODO  接口协商  emit函数注册
 }
 
-void GameJudge::findLenthMore3(int x, int y, int &flag) {
+void GameJudge::FindLengthMore3(int x, int y, int &flag) {
   int sum = 0;
-  int targetColor = gameMap[x][y].getColorID();
-  int startX, endX, startY, endY;
-  startX = endX = x;
-  startY = endY = y;
+  int target_color = game_map[x][y].GetColorId();
+  int start_x, end_x, start_y, end_y;
+  start_x = end_x = x;
+  start_y = end_y = y;
 
   // 上下左右四方向前进
-  sum += mapDFS(x + 1, y, targetColor, startX, startY, endX, endY);
-  sum += mapDFS(x, y + 1, targetColor, startX, startY, endX, endY);
-  sum += mapDFS(x - 1, y, targetColor, startX, startY, endX, endY);
-  sum += mapDFS(x, y - 1, targetColor, startX, startY, endX, endY);
+  sum += MapDfs(x + 1, y, target_color, start_x, start_y, end_x, end_y);
+  sum += MapDfs(x, y + 1, target_color, start_x, start_y, end_x, end_y);
+  sum += MapDfs(x - 1, y, target_color, start_x, start_y, end_x, end_y);
+  sum += MapDfs(x, y - 1, target_color, start_x, start_y, end_x, end_y);
 
   // 大于3 代表可以消去
   if (sum > 3) {
-    sendData();  // TODO 当前需消起止坐标传输
+    SendData();  // TODO 当前需消起止坐标传输
   }
 }
 
 // dfs递归求可消坐标
-int GameJudge::mapDFS(int nowX, int nowY, int targetColor, int &tMinX,
-                      int &tMinY, int &tMaxX, int &tMaxY) {
+int GameJudge::MapDfs(int now_x, int now_y, int target_color, int &t_min_x,
+                      int &t_min_y, int &t_max_x, int &t_max_y) {
   // 越界0
-  if (nowX < 0 || nowY < 0 || nowX >= MAXSIZE || nowY >= MAXSIZE) {
+  if (now_x < 0 || now_y < 0 || now_x >= MAXSIZE || now_y >= MAXSIZE) {
     return 0;
   }
 
   // 非匹配0
-  if (gameMap[nowX][nowY].getColorID() != targetColor) {
+  if (game_map[now_x][now_y].GetColorId() != target_color) {
     return 0;
   }
 
   // 匹配状况时
   int sum = 1;
-  if (nowX < tMinX) tMinX = nowX;
-  if (nowY < tMinY) tMinY = nowY;
-  if (nowX > tMaxX) tMaxX = nowX;
-  if (nowY > tMaxY) tMaxY = nowY;
+  if (now_x < t_min_x) t_min_x = now_x;
+  if (now_y < t_min_y) t_min_y = now_y;
+  if (now_x > t_max_x) t_max_x = now_x;
+  if (now_y > t_max_y) t_max_y = now_y;
 
   // 上下左右四方向前进
-  sum += mapDFS(nowX + 1, nowY, targetColor, tMinX, tMinY, tMaxX, tMaxY);
-  sum += mapDFS(nowX, nowY + 1, targetColor, tMinX, tMinY, tMaxX, tMaxY);
-  sum += mapDFS(nowX - 1, nowY, targetColor, tMinX, tMinY, tMaxX, tMaxY);
-  sum += mapDFS(nowX, nowY - 1, targetColor, tMinX, tMinY, tMaxX, tMaxY);
+  sum += MapDfs(now_x + 1, now_y, target_color, t_min_x, t_min_y, t_max_x, t_max_y);
+  sum += MapDfs(now_x, now_y + 1, target_color, t_min_x, t_min_y, t_max_x, t_max_y);
+  sum += MapDfs(now_x - 1, now_y, target_color, t_min_x, t_min_y, t_max_x, t_max_y);
+  sum += MapDfs(now_x, now_y - 1, target_color, t_min_x, t_min_y, t_max_x, t_max_y);
 
   return sum;
 }
+}  // namespace bjw

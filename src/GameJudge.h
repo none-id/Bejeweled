@@ -1,7 +1,3 @@
-//
-// Created by AAA on 2021/12/16.
-//
-
 #ifndef BEJEWELED_GAMEJUDGE_H
 #define BEJEWELED_GAMEJUDGE_H
 
@@ -13,16 +9,19 @@
 
 #define MAXSIZE 10
 
+namespace bjw {
+
 class GameJudge {
  private:
-  std::vector<std::vector<Item>> gameMap; // TODO 实现建图
+  std::vector<std::vector<Item>> game_map;  // TODO 实现建图
 
-  void findLenthMore3(int, int, int &);
-  int mapDFS(int, int, int, int&, int&, int&, int&);
-  void sendData();
+  void FindLengthMore3(int, int, int &);
+  int MapDfs(int, int, int, int &, int &, int &, int &);
+  void SendData();
 
  public:
-  void pdDeleteItem(int, int, int, int);
+  void PdDeleteItem(int, int, int, int);
 };
 
+}  // namespace bjw
 #endif  // BEJEWELED_GAMEJUDGE_H
