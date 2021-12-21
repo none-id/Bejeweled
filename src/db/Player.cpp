@@ -13,11 +13,9 @@ Player::Player(unsigned long long int id, std::string username,
 
 unsigned long long int Player::getId() const { return id; }
 
-bool Player::VerifyPassword(std::string password) const {
+bool Player::VerifyPassword(const std::string &password) const {
   return Player::password == password;
 }
-
-void Player::SetScore(unsigned long long int score) { Player::score = score; }
 
 unsigned long long int Player::GetScore() const { return score; }
 
