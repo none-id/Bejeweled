@@ -45,7 +45,7 @@ bool InitTable() {
       "id INTEGER PRIMARY KEY AUTOINCREMENT,"
       "name TEXT NOT NULL,"
       "password TEXT NOT NULL,"
-      "score INTEGER NOT NULL,"
+      "score INTEGER NOT NULL"
       ");");
 }
 
@@ -69,8 +69,7 @@ Player* GetPlayer(const std::string& name) {
     return nullptr;
   }
   int id = sqlite3_column_int(stmt, 0);
-  // std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt,
-  // 1));
+  // std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
   std::string password =
       reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
   int score = sqlite3_column_int(stmt, 3);
@@ -99,6 +98,22 @@ std::vector<Player*> GetPlayers() {
   }
   sqlite3_finalize(stmt);
   return players;
+}
+
+Player* CreatePlayer(const std::string& name, const std::string& password) {
+  Execute("INSERT INTO player (name, password, score) VALUES ('" + name +
+          "', '" + password + "', 0);");
+  return GetPlayer(name);
+}
+
+bool UpdateScore(Player* player, int score) {
+  if (player == nullptr) {
+    return false;
+  }
+  delete player;
+  Execute("UPDATE player SET score = " + std::to_string(score) +
+          " WHERE id = " + std::to_string(player->getId()) + ";");
+  return true;
 }
 
 }  // namespace db
