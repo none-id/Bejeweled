@@ -30,9 +30,9 @@ typedef struct node {
     this->end_y = endY;
     noInitFlag = true;
   }
-  bool operator==(node &a) {
+  bool operator==(node &a) const {
     return a.start_x == start_x && a.end_x == end_x && a.start_y == start_y &&
-               a.end_y = end_y;
+           a.end_y == end_y;
   }
 } bingoGroup;
 
@@ -49,8 +49,11 @@ class GameJudge {
 
   bool FindLengthMore3(int, int, bingoGroup &);
   int MapDfs(int, int, int, int &, int &, int &, int &);
-  void SendData();
+  void SendData(std::vector<std::vector<bingoGroup>>);
   void swapDataInMap(int x1, int y1, int x2, int y2);
+  void FillInDataList(bingoGroup);
+  void RebuildMap(std::vector<bingoGroup>);
+  void RebuildMapBasic(int start, int end, int level, bool heading);
 
  public:
   void PdDeleteItem(int, int, int, int);

@@ -5,41 +5,56 @@ namespace bjw {
 // 处理玩家移子操作
 // 接收数据格式：(x1, y1) (x2, y2) 对应两子交换前坐标
 void GameJudge::PdDeleteItem(int x1, int y1, int x2, int y2) {
-  int bingoNums = 0;
-  bingoGroup bgGFirst, bgGSecond;
+  int count = 0;
   std::vector<doGroup> doPdList;
+  std::vector<std::vector<bingoGroup>> bingoList;
 
   swapDataInMap(x1, y1, x2, y2);
 
   doPdList.emplace_back(x1, y1);
   doPdList.emplace_back(x2, y2);
 
-  // TODO 实现每次以时间点为界限 发送对应修改后子集合
-  while (!doPdList.empty() || bingoNums == 0) {
-    switch (bingoNums) {
-      case 0:
-        // TODO 反馈非成功消去状态
-        break;
-      case 1:
-        if (bgGFirst.noInitFlag) {
-        } else {
-        }
-        // TODO 反馈单一成功消去状态
-        break;
-      case 2:
+  while (!doPdList.empty()) {
+    int beforeSize = doPdList.size();
 
-        break;
-      default:
-        throw -1;
+    for (int i = 0; i < beforeSize; ++i) {
+      bingoGroup bgGTemp;
+      FindLengthMore3(doPdList[i].x, doPdList[i].y, bgGTemp);
+      if (bgGTemp.noInitFlag) {
+        bingoList[count].push_back(bgGTemp);
+
+        int b_start_x, b_start_y, b_end_x, b_end_y;
+        b_start_x = bgGTemp.start_x;
+        b_start_y = bgGTemp.start_y;
+        b_end_x = bgGTemp.end_x;
+        b_end_y = bgGTemp.end_y;
+
+        if (b_start_x == b_end_x) {
+          for (int j = b_start_y; j <= b_end_y; ++j) {
+            doPdList.emplace_back(b_start_x, j);
+          }
+        } else {
+          for (int j = b_start_x; j <= b_end_x; ++j) {
+            doPdList.emplace_back(j, b_start_y);
+          }
+        }
+      }
     }
 
-    bingoNums += FindLengthMore3(x1, y1, bgGFirst);
-    bingoNums += FindLengthMore3(x2, y2, bgGSecond);
+    RebuildMap(bingoList[count]);
+
+    for (int i = 0; i < beforeSize; ++i) {
+      doPdList.erase(doPdList.begin());
+    }
+
+    count++;
   }
+
+  SendData(bingoList);
 }
 
 // 向UI传输数据
-void GameJudge::SendData() {
+void GameJudge::SendData(std::vector<std::vector<bingoGroup>> bingoList) {
   // TODO  接口协商  emit函数注册
 }
 
@@ -104,4 +119,28 @@ void GameJudge::swapDataInMap(int x1, int y1, int x2, int y2) {
   game_map[x1][y1] = game_map[x2][y2];
   game_map[x2][y2] = temp_item;
 }
+
+// 根据目标List重构地图
+void GameJudge::RebuildMap(std::vector<bingoGroup> bingoList) {
+  for (int i = 0; i < bingoList.size(); ++i) {
+    int b_start_x, b_start_y, b_end_x, b_end_y;
+    b_start_x = bingoList[i].start_x;
+    b_start_y = bingoList[i].start_y;
+    b_end_x = bingoList[i].end_x;
+    b_end_y = bingoList[i].end_y;
+
+    if (b_start_x == b_end_x) {
+      RebuildMapBasic(b_start_y, b_end_y, b_start_x, false);
+    } else {
+      RebuildMapBasic(b_start_x, b_end_x, b_start_y, true);
+    }
+  }
+}
+void GameJudge::RebuildMapBasic(int start, int end, int level, bool heading) {
+  // heading   为真横向  为假纵向
+  if (heading) {
+  } else {
+  }
+}
+
 }  // namespace bjw
