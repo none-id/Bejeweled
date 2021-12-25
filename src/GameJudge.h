@@ -6,11 +6,11 @@
 #include <vector>
 
 #include "Item.h"
+#include "DataProcess.h"
 
 #define MAXSIZE 10
 
 namespace bjw {
-
 // 成功消去子的坐标存储结构
 typedef struct node {
   int start_x, end_x, start_y, end_y;
@@ -23,7 +23,7 @@ typedef struct node {
     this->end_y = endY;
     no_init_flag = true;
   }
-  void set(int startX, int endX, int startY, int endY) {
+  void Set(int startX, int endX, int startY, int endY) {
     this->start_x = startX;
     this->end_x = endX;
     this->start_y = startY;
@@ -46,14 +46,16 @@ typedef struct node1 {
 class GameJudge {
  private:
   std::vector<std::vector<Item>> game_map;  // TODO 实现建图
+  DataProcess *data_obj;
+  int count;
 
   bool FindLengthMore3(int, int, bingo_group &);
   int MapDfs(int, int, int, int &, int &, int &, int &);
   void SendData(std::vector<std::vector<bingo_group>>);
-  void SwapDataInMap(int x1, int y1, int x2, int y2);
+  void SwapDataInMap(int, int, int, int);
   void FillInDataList(bingo_group);
-  void RebuildMap(std::vector<bingo_group>);
-  void RebuildMapBasic(int start, int end, int level, bool heading);
+  void RebuildMap(std::vector<bingo_group>, DataProcess*);
+  void RebuildMapBasic(int, int, int, bool,  DataProcess*);
 
  public:
   void PdDeleteItem(int, int, int, int);

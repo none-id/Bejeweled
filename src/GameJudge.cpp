@@ -5,21 +5,22 @@ namespace bjw {
 // 处理玩家移子操作
 // 接收数据格式：(x1, y1) (x2, y2) 对应两子交换前坐标
 void GameJudge::PdDeleteItem(int x1, int y1, int x2, int y2) {
-  int count = 0;
-  std::vector<do_group> next_do_list;
+  std::vector<do_group> next_pd_list;
   std::vector<bingo_group> bingo_list;
+  data_obj = new DataProcess;
+  count = 0;
 
   SwapDataInMap(x1, y1, x2, y2);
 
-  next_do_list.emplace_back(x1, y1);
-  next_do_list.emplace_back(x2, y2);
+  next_pd_list.emplace_back(x1, y1);
+  next_pd_list.emplace_back(x2, y2);
 
-  while (!next_do_list.empty()) {
-    int beforeSize = next_do_list.size();
+  while (!next_pd_list.empty()) {
+    int beforeSize = next_pd_list.size();
 
     for (int i = 0; i < beforeSize; ++i) {
       bingo_group bg_temp;
-      FindLengthMore3(next_do_list[i].x, next_do_list[i].y, bg_temp);
+      FindLengthMore3(next_pd_list[i].x, next_pd_list[i].y, bg_temp);
       if (bg_temp.no_init_flag) {
         bingo_list.push_back(bg_temp);
 
@@ -31,21 +32,21 @@ void GameJudge::PdDeleteItem(int x1, int y1, int x2, int y2) {
 
         if (b_start_x == b_end_x) {
           for (int j = b_start_y; j <= b_end_y; ++j) {
-            next_do_list.emplace_back(b_start_x, j);
+            next_pd_list.emplace_back(b_start_x, j);
           }
         } else {
           for (int j = b_start_x; j <= b_end_x; ++j) {
-            next_do_list.emplace_back(j, b_start_y);
+            next_pd_list.emplace_back(j, b_start_y);
           }
         }
       }
     }
 
-    RebuildMap(bingo_list);
+    RebuildMap(bingo_list, data_obj);
     bingo_list.clear();
 
     for (int i = 0; i < beforeSize; ++i) {
-      next_do_list.erase(next_do_list.begin());
+      next_pd_list.erase(next_pd_list.begin());
     }
 
     count++;
@@ -53,7 +54,8 @@ void GameJudge::PdDeleteItem(int x1, int y1, int x2, int y2) {
 }
 
 // 向UI传输数据
-void GameJudge::SendData(std::vector<std::vector<bingo_group>> draw_acting_list) {
+void GameJudge::SendData(
+    std::vector<std::vector<bingo_group>> draw_acting_list) {
   // TODO  接口协商  emit函数注册
 }
 
@@ -72,7 +74,7 @@ bool GameJudge::FindLengthMore3(int x, int y, bingo_group &bgG) {
 
   // 大于3 代表可以消去
   if (sum > 3) {
-    bgG.set(start_x, end_x, start_y, end_y);
+    bgG.Set(start_x, end_x, start_y, end_y);
     return true;
   } else {
     return false;
@@ -120,7 +122,8 @@ void GameJudge::SwapDataInMap(int x1, int y1, int x2, int y2) {
 }
 
 // 根据目标List重构地图
-void GameJudge::RebuildMap(std::vector<bingo_group> bingoList) {
+void GameJudge::RebuildMap(std::vector<bingo_group> bingoList,
+                           DataProcess *data_obj) {
   for (int i = 0; i < bingoList.size(); ++i) {
     int b_start_x, b_start_y, b_end_x, b_end_y;
     b_start_x = bingoList[i].start_x;
@@ -129,16 +132,39 @@ void GameJudge::RebuildMap(std::vector<bingo_group> bingoList) {
     b_end_y = bingoList[i].end_y;
 
     if (b_start_x == b_end_x) {
-      RebuildMapBasic(b_start_y, b_end_y, b_start_x, false);
+      RebuildMapBasic(b_start_y, b_end_y, b_start_x, false, data_obj);
     } else {
-      RebuildMapBasic(b_start_x, b_end_x, b_start_y, true);
+      RebuildMapBasic(b_start_x, b_end_x, b_start_y, true, data_obj);
     }
   }
 }
-void GameJudge::RebuildMapBasic(int start, int end, int level, bool heading) {
+
+// 重构地图
+void GameJudge::RebuildMapBasic(int start, int end, int level, bool heading,
+                                DataProcess *data_obj) {
   // heading   为真横向  为假纵向
+
   if (heading) {
+    for (int i = start; i <= end; ++i) {
+      fin_group fg_clear(i, level, 0, 0);
+      fin_group fg_drop(i, level, 1, 1);
+      data_obj->PrePareData(fg_clear, count);
+      data_obj->PrePareData(fg_drop, count + 1);
+    }
+
+    count += 2;
+    // TODO 调用建图方法
   } else {
+    for (int i = start; i <= end; ++i) {
+      fin_group fg_clear(level, i, 0, 0);
+      data_obj->PrePareData(fg_clear, count);
+    }
+
+    fin_group fg_drop(level, start, 1, 1);
+    data_obj->PrePareData(fg_drop, count + 1);
+
+    count += 2;
+    // TODO 调用建图方法
   }
 }
 
