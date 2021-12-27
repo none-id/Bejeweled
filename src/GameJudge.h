@@ -5,8 +5,8 @@
 #include <cstdlib>
 #include <vector>
 
-#include "Item.h"
 #include "DataProcess.h"
+#include "Item.h"
 
 #define MAXSIZE 10
 
@@ -48,14 +48,16 @@ class GameJudge {
   std::vector<std::vector<Item>> game_map;  // TODO 实现建图
   DataProcess *data_obj;
   int count;
+  double now_score = 0;
 
   bool FindLengthMore3(int, int, bingo_group &);
   int MapDfs(int, int, int, int &, int &, int &, int &);
   void SendData(std::vector<std::vector<bingo_group>>);
   void SwapDataInMap(int, int, int, int);
   void FillInDataList(bingo_group);
-  void RebuildMap(std::vector<bingo_group>, DataProcess*);
-  void RebuildMapBasic(int, int, int, bool,  DataProcess*);
+  void RebuildMap(std::vector<bingo_group>, DataProcess *);
+  void RebuildMapBasic(int, int, int, bool, DataProcess *);
+  void ScorePlus(std::vector<bingo_group>);
 
  public:
   void PdDeleteItem(int, int, int, int);

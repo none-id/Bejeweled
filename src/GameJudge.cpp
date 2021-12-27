@@ -43,13 +43,14 @@ void GameJudge::PdDeleteItem(int x1, int y1, int x2, int y2) {
     }
 
     RebuildMap(bingo_list, data_obj);
+    ScorePlus(bingo_list);
     bingo_list.clear();
 
     for (int i = 0; i < beforeSize; ++i) {
       next_pd_list.erase(next_pd_list.begin());
     }
 
-    count++;
+    count += 2;
   }
 }
 
@@ -152,8 +153,8 @@ void GameJudge::RebuildMapBasic(int start, int end, int level, bool heading,
       data_obj->PrePareData(fg_drop, count + 1);
     }
 
-    count += 2;
     // TODO 调用建图方法
+
   } else {
     for (int i = start; i <= end; ++i) {
       fin_group fg_clear(level, i, 0, 0);
@@ -163,9 +164,21 @@ void GameJudge::RebuildMapBasic(int start, int end, int level, bool heading,
     fin_group fg_drop(level, start, 1, 1);
     data_obj->PrePareData(fg_drop, count + 1);
 
-    count += 2;
     // TODO 调用建图方法
   }
+}
+
+void GameJudge::ScorePlus(std::vector<bingo_group> bingo_list) {
+  double sum_temp = 0;
+
+  for (auto i : bingo_list) {
+    int num = i.end_y - i.start_y + i.end_x - i.start_x;
+    sum_temp += num * (1 + (count - 1) * 0.1);
+  }
+
+  now_score += sum_temp;
+
+  // TODO  UI更新数据
 }
 
 }  // namespace bjw
