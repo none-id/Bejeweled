@@ -7,35 +7,9 @@
 
 #include "DataProcess.h"
 #include "Item.h"
-
-#define MAXSIZE 10
+#include "MapBuild.h"
 
 namespace bjw {
-// 成功消去子的坐标存储结构
-typedef struct node {
-  int start_x, end_x, start_y, end_y;
-  bool no_init_flag = false;
-  node();
-  node(int startX, int endX, int startY, int endY) {
-    this->start_x = startX;
-    this->end_x = endX;
-    this->start_y = startY;
-    this->end_y = endY;
-    no_init_flag = true;
-  }
-  void Set(int startX, int endX, int startY, int endY) {
-    this->start_x = startX;
-    this->end_x = endX;
-    this->start_y = startY;
-    this->end_y = endY;
-    no_init_flag = true;
-  }
-  bool operator==(node &a) const {
-    return a.start_x == start_x && a.end_x == end_x && a.start_y == start_y &&
-           a.end_y == end_y;
-  }
-} bingo_group;
-
 typedef struct node1 {
   int x, y;
   node1();
