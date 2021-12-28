@@ -37,16 +37,18 @@ typedef struct node {
 
 class MapBuild {
  private:
-  Item game_map;
+  Item **game_map;
   int level_discrete_range[4][2];
   int level_board[4];
-  bool CountForJudge(int);
-  bool FindLengthMore3(int, int, bingo_group &);
+  int level;
+  bool JudgeDiscretion();
+  bool FindLengthMoreN(int, int, bingo_group &, int);
   int MapDfs(int, int, int, int &, int &, int &, int &);
+  int CountProbalitiy(int, int, int, bool);
 
  public:
   Item GetGameMap();
-  MapBuild();
+  MapBuild(int);
 };
 
 }  // namespace bjw
