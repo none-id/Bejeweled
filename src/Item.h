@@ -18,6 +18,7 @@ class Item {
  public:
   int cond;  // 代表该子状态   -1初始化  0不变   1消除  2新增
   int GetColorId();
+  Item();
   Item(std::string color_name);
 };
 

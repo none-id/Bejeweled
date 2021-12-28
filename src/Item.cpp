@@ -19,5 +19,6 @@ int Item::ColorString2Rank(std::string color_name) {
 }
 
 int Item::GetColorId() { return color_id; }
+Item::Item() { color_id = -1; }
 
 }  // namespace bjw
