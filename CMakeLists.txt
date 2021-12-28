@@ -17,7 +17,7 @@ add_executable(Bejeweled
         src/db/Player.cpp src/db/Player.h
         src/db/db.cpp src/db/db.h
         src/Item.cpp src/Item.h
-        src/GameJudge.cpp src/GameJudge.h)
+        src/GameJudge.cpp src/GameJudge.h src/MapBuild.cpp src/MapBuild.h src/DataProcess.cpp src/DataProcess.h)
 
 target_link_libraries(Bejeweled
         sqlite3
