@@ -4,16 +4,16 @@
 
 #include "MapBuild.h"
 
-// TODO 地图生成 离散定义
+// TODO 地图生成 离散定义 返回地图对象函数
 bjw::Item bjw::MapBuild::GetGameMap() { return **game_map; }
 
+// 离散度判断
 bool bjw::MapBuild::JudgeDiscretion() {
-  int board = level_board[level];
   bool visited_map[board][board];
   int discretion_count = 0;
   for (int i = 1; i <= board; ++i) {
     for (int j = 1; j <= board; ++j) {
-      visited_map[i][j] = false;
+      visited_map[i][j] = false;  // 初始化访问标记
     }
   }
 
@@ -22,13 +22,13 @@ bool bjw::MapBuild::JudgeDiscretion() {
       if (!visited_map[i][j]) {
         bingo_group bg_temp;
         if (FindLengthMoreN(i, j, bg_temp, 2)) {
-          if (bg_temp.start_x == bg_temp.end_x) {
+          if (bg_temp.start_x == bg_temp.end_x) {  // x起止相等  竖消
             discretion_count += CountProbalitiy(bg_temp.start_y, bg_temp.end_y,
                                                 bg_temp.start_x, false);
             for (int k = bg_temp.start_y; k <= bg_temp.end_y; ++k) {
-              visited_map[bg_temp.start_x][k] = true;
+              visited_map[bg_temp.start_x][k] = true;  //判断区标记
             }
-          } else {
+          } else {  // 横消
             discretion_count += CountProbalitiy(bg_temp.start_x, bg_temp.end_x,
                                                 bg_temp.start_y, true);
             for (int k = bg_temp.start_x; k <= bg_temp.end_x; ++k) {
@@ -42,6 +42,7 @@ bool bjw::MapBuild::JudgeDiscretion() {
     }
   }
 
+  // TODO 离散度可调
   discretion_count *= level_board[level];
 
   if (discretion_count < level_discrete_range[level][0] ||
@@ -65,7 +66,7 @@ bool bjw::MapBuild::FindLengthMoreN(int x, int y, bingo_group &bgG, int n) {
   sum += MapDfs(x - 1, y, target_color, start_x, start_y, end_x, end_y);
   sum += MapDfs(x, y - 1, target_color, start_x, start_y, end_x, end_y);
 
-  // 大于3 代表可以消去
+  // 大于n满足需求
   if (sum > n) {
     bgG.Set(start_x, end_x, start_y, end_y);
     return true;
@@ -78,7 +79,7 @@ bool bjw::MapBuild::FindLengthMoreN(int x, int y, bingo_group &bgG, int n) {
 int bjw::MapBuild::MapDfs(int now_x, int now_y, int target_color, int &t_min_x,
                           int &t_min_y, int &t_max_x, int &t_max_y) {
   // 越界0
-  if (now_x < 0 || now_y < 0 || now_x >= MAXSIZE || now_y >= MAXSIZE) {
+  if (now_x < 1 || now_y < 1 || now_x > board || now_y > board) {
     return 0;
   }
 
@@ -108,11 +109,11 @@ int bjw::MapBuild::MapDfs(int now_x, int now_y, int target_color, int &t_min_x,
 }
 
 bjw::MapBuild::MapBuild(int level) {
-  // TODO 二维数组定义
   game_map = new Item *[MAXSIZE];
   for (int i = 0; i < MAXSIZE; ++i) game_map[i] = new Item[MAXSIZE];
-  // TODO 二维数组边缘填充NULL
+  // 此处填充null_flag 由item初始构造器实现
 
+  // TODO 此处数据需要建图协商
   // 初始化数据
   // level_board棋盘阶数
   level_board[1] = 6;
@@ -129,6 +130,7 @@ bjw::MapBuild::MapBuild(int level) {
 
   // level导入
   this->level = level;
+  this->board = level_board[level];
 }
 
 // 计算起止点外层是否有可交换棋子

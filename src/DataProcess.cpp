@@ -9,5 +9,5 @@ bjw::DataProcess::DataProcess() {
 }
 
 void bjw::DataProcess::PrePareData(bjw::fin_group fin_obj, int count) {
-  fin_list[count].push_back(fin_obj);
+  fin_list[count].emplace_back(fin_obj);
 }

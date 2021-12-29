@@ -12,6 +12,7 @@ class Item {
   std::string color_name;  // 该子颜色string  用于文件读写
   int color_id;            // 该子颜色int  用于程序判断
   int item_id;             // 该子id标识
+  bool null_flag;
 
   static int ColorString2Rank(std::string color_name);
 

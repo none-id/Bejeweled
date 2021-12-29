@@ -6,6 +6,7 @@ Item::Item(std::string color_name) {
   this->color_name = color_name;
   color_id = ColorString2Rank(color_name);
   cond = -1;
+  null_flag = false;
 }
 
 int Item::ColorString2Rank(std::string color_name) {
@@ -19,6 +20,10 @@ int Item::ColorString2Rank(std::string color_name) {
 }
 
 int Item::GetColorId() { return color_id; }
-Item::Item() { color_id = -1; }
+
+Item::Item() {
+  color_id = -1;
+  null_flag = true;
+}
 
 }  // namespace bjw
