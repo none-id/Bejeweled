@@ -14,8 +14,8 @@ find_package(Qt5 COMPONENTS
 
 add_executable(Bejeweled
         src/main.cpp
-        src/DB/Player.cpp src/DB/Player.h
-        src/DB/db.cpp src/DB/db.h
+        src/db/Player.cpp src/db/Player.h
+        src/db/db.cpp src/db/db.h
         src/Item.cpp src/Item.h
         src/GameJudge.cpp src/GameJudge.h src/MapBuild.cpp src/MapBuild.h src/DataProcess.cpp src/DataProcess.h)
 
